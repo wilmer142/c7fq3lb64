@@ -1,4 +1,6 @@
 class ExpensesController < ApplicationController
+	before_action :authenticate_user!
+	
   def index
   	if params[:category_id].present? && params[:concept].present?
 	 		@expenses = Expense.where("category_id = ? and concept LIKE ?", params[:category_id], "%#{params[:concept]}%")
