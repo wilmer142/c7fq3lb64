@@ -1,16 +1,14 @@
 class ExpensesController < ApplicationController
 	before_action :authenticate_user!
-	
+
   def index
-  	if params[:category_id].present? && params[:concept].present?
-	 		@expenses = Expense.where("category_id = ? and concept LIKE ?", params[:category_id], "%#{params[:concept]}%")
-  	elsif params[:concept].present?
-  		@expenses = Expense.where("concept LIKE ?", "%#{params[:concept]}%")
-  	elsif params[:category_id].present?
-  		@expenses = Expense.where("category_id = ?", params[:category_id], )
-  	else
-  		@expenses = Expense.all
-  	end
+  	@expenses = Expense.where("user_id = ?", current_user.id).order("date DESC")
+    if params[:concept].present?
+      @expenses = @expenses.where("concept LIKE ?", "%#{params[:concept]}%")
+    end
+    if params[:category_id].present?
+      @expenses = @expenses.where("category_id = ?", params[:category_id])
+    end
   end
 
   private 
